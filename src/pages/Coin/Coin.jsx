@@ -8,7 +8,7 @@ const Coin = () => {
   const { coinId } = useParams();
   const [coinData, setCoinData] = useState(null);
   const [historicalData, setHistoricalData] = useState(null);
-  const { currency, API_KEY } = useContext(CoinContext);
+  const { currency, API_KEY, balance, portfolio, buyCoin, sellCoin } = useContext(CoinContext);
   
   // Track timeline window selection: 1 day, 7 days, 30 days, or 365 days
   const [days, setDays] = useState(7);
@@ -92,7 +92,64 @@ const Coin = () => {
         <div className="coin-chart" style={{ height: '320px', width: '100%', maxWidth: '700px', margin: 'auto' }}>
           <LineChart historicalData={historicalData} />
         </div>
+        <div className="trading-desk-card" style={{
+          background: 'linear-gradient(145deg, #1e1b4b, #111827)',
+          border: '1px solid #374151',
+          borderRadius: '12px',
+          padding: '20px',
+          maxWidth: '700px',
+          margin: '30px auto',
+          color: '#fff'
+        }}>
+          <h3 style={{ marginBottom: '15px', color: '#818cf8' }}>NovaMint Virtual Order Execution</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', fontSize: '14px', color: '#9ca3af' }}>
+            <span>Available Buying Power: <b style={{ color: '#10b981' }}>{currency.symbol}{balance.toLocaleString(undefined, {maximumFractionDigits: 2})}</b></span>
+            <span>Owned: <b>{portfolio.find(i => i.id === coinId)?.qty || 0} {coinData.symbol?.toUpperCase()}</b></span>
+          </div>
 
+          <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <input 
+              type="number" 
+              placeholder="Token execution qty..." 
+              id="tradeQtyInput"
+              min="0"
+              step="any"
+              style={{
+                flex: 1,
+                background: '#030712',
+                border: '1px solid #4b5563',
+                padding: '10px',
+                borderRadius: '6px',
+                color: '#fff',
+                outline: 'none'
+              }}
+            />
+            <button 
+              onClick={() => {
+                const qty = parseFloat(document.getElementById('tradeQtyInput').value);
+                if(!qty || qty <= 0) return alert("Please specify an input quantity.");
+                const currentPrice = coinData.market_data?.current_price?.[currency.name];
+                const res = buyCoin(coinData, qty, currentPrice);
+                alert(res.message);
+              }}
+              style={{ background: '#10b981', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              BUY
+            </button>
+            <button 
+              onClick={() => {
+                const qty = parseFloat(document.getElementById('tradeQtyInput').value);
+                if(!qty || qty <= 0) return alert("Please specify an input quantity.");
+                const currentPrice = coinData.market_data?.current_price?.[currency.name];
+                const res = sellCoin(coinId, qty, currentPrice);
+                alert(res.message);
+              }}
+              style={{ background: '#ef4444', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              SELL
+            </button>
+          </div>
+        </div>
         <div className="coin-info">
           <ul>
             <li>Crypto Market Rank</li>
