@@ -1,17 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-*{
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family: "Outfit", sans-serif;
+    font-family: "Inter", sans-serif;
 }
-a{
+
+body {
+    background-color: #0b0f19; /* Obsidian Slate Dark Mode */
+    color: #f3f4f6;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
     text-decoration: none;
     color: inherit;
 }
-.app{
+
+.app {
     min-height: 100vh;
-    color: white;
-    background: linear-gradient(#0b004e, #1d152f, #002834);
+    /* Subtle neon ambient lights in top-right and bottom-left corner */
+    background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.07), transparent 45%),
+                radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.04), transparent 40%);
 }
